@@ -17,6 +17,18 @@
       "day": "4th day",
       "reminder": false,
       "id": 3
+    },
+    {
+      "text": "test",
+      "day": "efwer",
+      "reminder": false,
+      "id": 4
+    },
+    {
+      "text": "test",
+      "day": "test",
+      "reminder": true,
+      "id": 5
     }
   ]
 }
