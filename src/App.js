@@ -17,19 +17,19 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [showAddTask, setShowAddTask] = useState(false);
 
-  //Fetch tasks
-  const getTasks = async () => {
-    const tasksFromServer = await fetchTasks();
-    setTasks(tasksFromServer);
-  };
   /**
    * useEffect is ideally used to load something or perform some operation right after the page loads
    */
   useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
+    
     getTasks();
   }, []);
 
-
+  //Fetch tasks
   const fetchTasks = async () => {
     const res = await fetch("http://localhost:9000/tasks");
     const data = await res.json();
