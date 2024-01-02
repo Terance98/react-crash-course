@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Complete project proposal",
+      "day": "March 1 at 10pm",
+      "reminder": false
+    },
+    {
+      "text": "test",
+      "day": "2nd oct",
+      "reminder": true,
+      "id": 2
+    },
+    {
+      "text": "power",
+      "day": "4th day",
+      "reminder": false,
+      "id": 3
+    }
+  ]
+}
