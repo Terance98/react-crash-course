@@ -5,6 +5,8 @@ import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import About from "./components/About";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AxiosCancelableRequest } from "./helpers/axios-cancellable-request";
+
 
 function App() {
   /**
@@ -19,22 +21,42 @@ function App() {
 
   /**
    * useEffect is ideally used to load something or perform some operation right after the page loads
+   * It takes in 2 parameters, 1st is the function logic defined by the user
+   * 2nd is the dependencies.
+   * Here since the dependencies array is empty, the useEffect will only be triggered during a page reload
+   * Incase if we pass in a dependency variable like `showAddTask` for instance, then the useEffect will also listen
+   * to the changes that happen to this variable and then will call the callback function
+   */
+
+  /**
+   * Ideally as per the axios example below
+   * Whenever we make an API call, if the user redirects to another page or so
+   * We should prevent the API call from finishing and rendering the component
+   * Therefore, we should use the below logic to implement a cleanup logic for the useEffect
+   * So the cleanup logic will abort the api calls and prevent the components from loading into the page
+   * It can remove setInterval() type of event listeners etc..
+   * This can help prevent memory leakage
    */
   useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks();
-      setTasks(tasksFromServer);
-    };
-    
-    getTasks();
-  }, []);
+    const axiosInstance = new AxiosCancelableRequest();
+    const apiUrl = "http://localhost:9000/tasks";
 
-  //Fetch tasks
-  const fetchTasks = async () => {
-    const res = await fetch("http://localhost:9000/tasks");
-    const data = await res.json();
-    return data;
-  };
+    const fetchData = async () => {
+      try {
+        const data = await axiosInstance.makeRequest(apiUrl);
+        setTasks(data);
+      } catch (error) {
+        // Handle error if needed
+      }
+    };
+
+    fetchData();
+
+    // Cleanup function for useEffect
+    return () => {
+      axiosInstance.cancelRequest("Request canceled by useEffect cleanup");
+    };
+  }, []);
 
   //Fetch task
   const fetchTask = async (id) => {
